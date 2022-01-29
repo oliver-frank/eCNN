@@ -5,17 +5,10 @@ Inspiration and Data Set: https://github.com/prajnasb/observations
 
 Used for a TU Berlin Rasperry PI Master Project - WS 2020/21
 
-Next Steps:
-- expand Data Set for different mask colors, light and position conditions 
-- train model again - Testing for the accuracy that works out best for real life apllication - enhance the robustness
-- train model with GPU instead of CPU
-- Visualize statistical Measurments 
-
-
 Usage:
 
-You first have to train a model, which due to capacity space was not possible to upload here. For that, use the MaskDetectorTraining file first. The Training data you can get from the source posted above. 
-Afterwards you can use the slim MaskDetector-Script to use your model or if you for example want to use it on a device with low processor power the MaskDetetcor-Script with the associated lite-model will work out for you. 
+One needs to train the model with the MaskDetectorTraining file first, which due to insufficient capacity was not possible to upload here. The necessary data is uploaded in the source above. Afterwards the model is executable with slim MaskDetector script, or alternativley when only low processor power is available with the associated lite model.
+
 
 &ensp;
 
