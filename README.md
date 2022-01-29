@@ -7,7 +7,7 @@ Used for a TU Berlin Rasperry PI Master Project - WS 2020/21
 
 Usage:
 
-One needs to train the model with the MaskDetectorTraining file first, which due to insufficient capacity was not possible to upload here. The necessary data is uploaded in the source above. Afterwards the model is executable with slim MaskDetector script, or alternativley when only low processor power is available with the associated lite model.
+One needs to train the model with the MaskDetectorTraining file first, which due to insufficient capacity was not possible to upload here. The necessary data is uploaded in the source above. Afterwards the model is executable with the MaskDetector script, or alternativley when only low processor power is available with the associated lite script.
 
 
 &ensp;
