@@ -5,9 +5,6 @@ Created on Fri Jan  8 10:55:37 2021
 @author: OliveTree
 """
 
-
-# Installation der notwendigen Bibliotheken
-
 # pip install --user google-assistant-sdk[samples]
 # pip install opencv-python
 # pip install os
@@ -42,15 +39,9 @@ from keras.models import load_model
 
 # Pfad in dem die Trainingsdaten abgespeichert sind 
 data_path = r'C:\YourDataPath'
-# Anzahl an Kategorien wird durch die nzahl an Ordnern in path bestimmt
-# -> with_mask und without_mask -> 2 Kategorien 
-# os -> Operating System -> Bibliothek um plattformunabhängig Programm laufen 
-# zu lassen (Linux, Windows, Mac)
 categories = os.listdir(data_path) 
 # Zuordnung von 0 und 1 an categories -> 0: without_mask  1: with_mask 
 labels = [i for i in range(len(categories))] 
-# ordnet jedem Trainingsobjekt sein Label entsprechend seiner Kategorie zu
-# dict schreibt von char to int und zip ordnet die beiden paarweise korrekt zu
 label_dict = dict(zip(categories,labels))
 
 # Kontrolle
@@ -74,9 +65,8 @@ for category in categories:
     folder_path = os.path.join(data_path,category)  
     # fügt alle Tainingsobjekte aus dem jeweiligen Ordner in eine Liste
     img_names = os.listdir(folder_path) 
-    # Kontrolle der folderpaths
+
     print(folder_path)
-    # Überprüfung der Länge der zwei img_names Listen
     print(len(img_names))
     
     # iteriert durch alle Objekte der beiden Listen von img_names 
@@ -84,22 +74,16 @@ for category in categories:
         # erstellt einen Pfad pro Iteration und öffnet so jedes Bild in beiden 
         # Ordnern 
         img_path = os.path.join(folder_path,img_name)
-        # liest jedes übergebene Bild und packt es in eine Matrix, die die 
-        # Pixelinformationen enthält. Die Dimensionalität wird durch die gegebene 
-        # Auflösung (Pixel) der image-Datei und den drei RGB-Werten bestimmt 
         img = cv2.imread(img_path)  
-        # try -> führt aus, wenn kein error vorgekommen ist, sonst -> except
+
         try:   
             # gray-scaled jedes image und macht so aus 3 RGB-Werten -> 
-            # 1 GrayScale-Wert, was zu niedrigerer benötigter Rechenkapazität 
-            # führt 
+            # 1 GrayScale-Wert für niedrigere Rechenkapazität 
             gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY) 
             # jedes image wird auf 150x150 Pixel gesized (vorher 4608x3456)
             resized = cv2.resize(gray,(img_size,img_size)) 
             # fügt leerer Data-list jedes resized Image zu 
             data_list.append(resized)
-            # fügt für jedes in data_list hinzugefügte image, das dazugehörige 
-            # label in label_list
             label_list.append(label_dict[category])
         
         except Exception as e:
@@ -110,7 +94,7 @@ for category in categories:
 print('Anzahl aller Trainingsbilder:',len(data_list)) 
 print('Anzahl der zugehörigen Labels:',len(label_list)) 
 
-# Daten werden normalisiert (zwischen 0 und 1 gemapped) und in np-Form gebracht
+# Daten werden normalisiert 
 data_list = np.array(data_list)/255.0  
 # data_list wird in 4-Dimensionale Form gebracht, es wird dem Tensor eine 1
 # hinzugefügt                                           
@@ -119,7 +103,7 @@ data_list = np.reshape(data_list,(data_list.shape[0],img_size,img_size,1))
 label_list = np.array(label_list)   
 # Kodierung der Labels in zwei.dim. Matrix von eindim. Array 
 new_label_list = np_utils.to_categorical(label_list)
-# Speichern der Daten in NPY-Dateien im directory 
+
 np.save('data',data_list)                              
 np.save('label',new_label_list)    
 
@@ -132,8 +116,7 @@ np.save('label',new_label_list)
 # Laden der abgespeicherten Daten
 data = np.load('data.npy') 
 label = np.load('label.npy') 
-# Sequential ist eine Art Grundgerüst, dass man nach belieben und in einem best.
-# Rahmen den eigenen Bedürfnissen anpassen und modellieren kann 
+# Sequential ist eine Art Grundgerüst
 model = Sequential() 
 
 # Adding des ersten Layers mit 200 Neuronen, einem 3x3 Faltungsfilter (faltet
@@ -160,10 +143,10 @@ model.add(Flatten())
 # herausgenommen werden 
 model.add(Dropout(0.5))
 # geflatteter, eindimensionaler Vektor wird in Dense-Layer von 50 Neuronen über-
-# führt -> fully connected, in Wahrscheinlichkeitsverteilung überführt
+# führt -> fully connected softmax
 model.add(Dense(50,activation='relu'))
 # letzter Layer besitzt soviele Neuronen wie es Lösungs-/ Klassifikationsmöglichkeiten
-# gibt -> fully connnected, in Wahrscheinlichkeitsverteilung überführt
+# gibt -> fully connnected softmax
 # Kategorie mit höchster W.keit wird als Antwort ausgegeben (hier: 0 oder 1)
 model.add(Dense(2,activation='softmax'))
 
@@ -181,9 +164,7 @@ model.summary()
 # Splitten der Daten in Trainings- und Testdaten (9 zu 1)
 train_data, test_data, train_label, test_label = \
     train_test_split(data, label, test_size=0.1)  
-    
-# Unter diesem Namen wird im Directory das beste Modell jeder Epoche (Best of 
-# all 31 Patches) gespeichert 
+
 # filepath = 'model-{epoch:03d}.model'
 
 # Das einzige beste Modell wird gespeichert 
@@ -245,8 +226,6 @@ while(True):
     # Klassifizierte Bereiche in Variable schließen
     faces = faceCascade.detectMultiScale(gray,1.3,5)
     
-    # for-Schleife, um die als Gesichter klassifizierten Bereiche in shape für 
-    # unser Modell zu bringen und es schließlich klassifizieren zu lassen (0 oder 1)
     for x,y,w,h in faces:
         # Grayscale auf image (?)
         face_img = gray[y:y+w,x:x+h]
@@ -278,4 +257,5 @@ while(True):
 # Alle Fenster und Videos schließen
 cv2.destroyAllWindows()     
 video_capture.release()     
+
 
