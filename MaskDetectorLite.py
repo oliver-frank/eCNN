@@ -54,19 +54,16 @@ while(True):
     # Klassifizierte Bereiche in Variable schließen
     faces = faceCascade.detectMultiScale(gray,1.3,5)
     
-    # for-Schleife, um die als Gesichter klassifizierten Bereiche in shape für 
-    # unser Modell zu bringen und es schließlich klassifizieren zu lassen (0 oder 1)
     for x,y,w,h in faces:
-        # Grayscale auf image (?)
+        # Grayscaled image 
         face_img = gray[y:y+w,x:x+h]
         # Größe des durch Classifier ausgesuchten Bildes auf img_size mappen
         resized = cv2.resize(face_img,(img_size,img_size))
-        # Pixelwert-Normalisierung in Bereich zwischen 0 und 1
+        # Pixelwert-Normalisierung
         normalized = resized/255.0
         # Matrix zu np-array shapen und 1er Vektor anhängen
         reshaped = np.reshape(normalized,(1,img_size,img_size,1)) 
-        # Gibt die Details unseres interpreter Modells heraus 
-        # in dem Fall waren sie aber schon so gesetzt, wie wir es benötigt haben 
+        # Details des interpreter modells
         input_details = interpreter.get_input_details()
         output_details = interpreter.get_output_details()
         # converted die eingegebenen Daten in die richtige Form für das Modell
@@ -96,4 +93,5 @@ while(True):
         break;
 # Alle Fenster und Videos schließen
 cv2.destroyAllWindows()     
+
 video_capture.release()     
