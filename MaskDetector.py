@@ -49,3 +49,4 @@ while(True):
         
 cv2.destroyAllWindows()
 video_capture.release()
+
